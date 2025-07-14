@@ -70,6 +70,7 @@ To avoid unnecessary charges:
 
 
 ###Optional Enhancements
+
 Install and configure a web server (Apache or Nginx).
 Assign an Elastic IP to make your instance’s address persistent.
 Add IAM roles to allow your instance to access other AWS services like S3.
