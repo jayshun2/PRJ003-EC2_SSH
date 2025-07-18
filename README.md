@@ -1,82 +1,98 @@
-# PRJ003-EC2_SSH
 # EC2 Linux Instance and SSH Into It
 
 ## Overview
 
-This project demonstrates how to launch a Linux-based EC2 instance on Amazon Web Services (AWS) and connect to it using SSH. It’s an essential first step for anyone learning cloud computing or building applications in the cloud. You'll gain hands-on experience working with AWS infrastructure and learn how to securely access and manage remote servers.
+This project walks through launching a Linux-based EC2 instance on Amazon Web Services (AWS) and securely connecting to it via SSH. This is a foundational skill for anyone getting started with AWS or cloud infrastructure. You'll gain practical experience with virtual machines, secure access control, and basic network configuration in the AWS environment.
 
 ## Architecture
 
-The core AWS services used in this project include:
+The following AWS components are used:
 
-- **Amazon EC2 (Elastic Compute Cloud):** Provides the virtual Linux server you launch and connect to.
-- **Amazon VPC (Virtual Private Cloud):** Creates an isolated network environment for your EC2 instance to run in.
-- **Security Groups:** Acts as a firewall, controlling inbound and outbound traffic — in this case, enabling SSH (port 22) access.
-- **Key Pair:** A public-private key mechanism used to securely authenticate access to the instance.
+* **Amazon EC2 (Elastic Compute Cloud):** Hosts the virtual Linux server.
+* **Amazon VPC (Virtual Private Cloud):** Provides the isolated network environment.
+* **Security Groups:** Firewall rules that allow inbound SSH (port 22) traffic.
+* **Key Pair:** Used to authenticate and securely connect to your instance.
 
-These components work together to spin up a cloud-based Linux server that can be safely accessed from your local machine using SSH.
+Together, these services enable you to provision a secure, cloud-based Linux environment that you can access from your local machine.
 
 ## Getting Started
 
 ### Prerequisites
 
-- AWS Free Tier account
-- Basic terminal knowledge (macOS, Linux, or Windows with WSL or PuTTY)
-- SSH client installed
-- A modern web browser
+* AWS account with Free Tier access
+* SSH client installed (Terminal on macOS/Linux, WSL or PuTTY on Windows)
+* Basic familiarity with the command line
 
 ### Steps
 
 1. **Create a Key Pair**
-   - In the AWS Console, search for “Key Pairs” and create a new key pair named `ec2-keypair`.
-   - Choose `.pem` format and download the private key to a safe location.
+
+   * In the AWS Console, navigate to **EC2 > Network & Security > Key Pairs**.
+   * Create a new key pair (e.g., `ec2-keypair`) and choose `.pem` format.
+   * Download the private key file and store it securely.
 
 2. **Launch an EC2 Instance**
-   - Go to the EC2 dashboard and click "Launch Instance".
-   - Name it `my-ec2-linux`.
-   - Choose **Amazon Linux 2023** as the AMI.
-   - Select `t2.micro` as the instance type (Free Tier eligible).
-   - Use the key pair you created (`ec2-keypair`) for login.
-   - Under Network Settings, allow SSH (port 22) from your IP or 0.0.0.0/0 (less secure).
-   - Launch the instance.
+
+   * Go to **EC2 > Instances > Launch Instance**.
+   * Set the name (e.g., `my-ec2-linux`).
+   * Choose **Amazon Linux 2023 (64-bit x86)** as the AMI.
+   * Select **t2.micro** (Free Tier eligible).
+   * Under **Key pair login**, select your key pair.
+   * In **Network settings**, allow SSH (port 22) from your IP address.
+   * Launch the instance.
 
 3. **Retrieve the Public IP**
-   - Go to the EC2 dashboard, select your instance, and note the public IPv4 address.
+
+   * In the EC2 dashboard, select your instance.
+   * Copy the **Public IPv4 address** for later use in the SSH connection.
 
 ## Usage
 
-Once your instance is running:
+1. Open your terminal.
+2. Navigate to the directory where your `.pem` file is saved:
 
-1. Open your terminal and navigate to the directory containing your `.pem` file.
-2. Run the SSH command:
+   ```bash
+   cd ~/Downloads  # or wherever the file is
+   ```
+3. Modify the file permissions:
+
+   ```bash
+   chmod 600 ec2-keypair.pem
+   ```
+4. Connect to the instance using the provided command:
+
    ```bash
    ssh -i ec2-keypair.pem ec2-user@<your-public-ip>
-3. If prompted, type yes to continue.
-4. You are now connected to your EC2 instance!
+   ```
+5. Type `yes` if prompted to trust the host.
+6. You're now inside your EC2 instance!
 
+To verify the system is working:
 
-To verify everything is working:
-Run uname -a or top to interact with the Linux system.
-Use exit to safely disconnect from the session.
+```bash
+uname -a
+top
+```
 
+Use `exit` to safely disconnect.
 
-###Cleanup
-To avoid unnecessary charges:
+## Cleanup
+
+To avoid charges:
+
 1. Go to the EC2 dashboard.
 2. Select your instance.
-3. Click Instance state → Terminate instance.
-4. Confirm termination.
-5. Optionally, delete your key pair from the "Key Pairs" section of the EC2 console.
+3. Click **Instance state → Terminate instance**.
+4. Confirm the termination.
+5. Optionally, delete the key pair from **EC2 > Key Pairs**.
 
+## Optional Enhancements
 
-###Optional Enhancements
+* Install a web server (Apache, Nginx) on the instance.
+* Assign an Elastic IP for persistent access.
+* Attach IAM roles to the instance for secure access to services like S3.
+* Use AWS CLI or Terraform to automate this entire setup.
 
-Install and configure a web server (Apache or Nginx).
-Assign an Elastic IP to make your instance’s address persistent.
-Add IAM roles to allow your instance to access other AWS services like S3.
-Automate the provisioning process using Terraform or AWS CLI.
+## License
 
-
-###License
 MIT License
-
